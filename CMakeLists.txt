@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 2.6)
+set (MY_SOLUTION_NAME TPL)
+PROJECT(${MY_SOLUTION_NAME})
+
+
+
+SET(MY_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+SET(ANTLR_DIR ${PROJECT_SOURCE_DIR}/extern/libantlr3c-3.2)
+
+ADD_DEFINITIONS(-D_LIB)
+
+SUBDIRS(TPLexecutor)
+SUBDIRS(TPLparser)
+SUBDIRS(TPLutility)
