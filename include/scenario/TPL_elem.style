@@ -1,0 +1,133 @@
+$expand_code=expand %TBNAME%();
+$expandtrans_code=expand %TBNAME%() ~> %TSNAME%;
+$moveto_code=moveto %TSNAME%;
+$state_start
+	%INI_GOAL% state %SNAME%{
+		entry{
+			%ENTRY_CODE%
+		}
+		transition{
+			%TRANS_CODE%
+		}
+		stay{
+			%STAY_CODE%
+		}
+		exit{
+			%EXIT_CODE%
+		}
+	}
+$state_end
+
+$basic_bhv_start
+behavior() %BNAME%{
+	construct{
+	}
+	destruct{
+	}
+	%STATES%
+};
+$basic_bhv_end
+
+
+
+
+
+
+
+
+
+
+
+
+
+$export_f_win=__declspec(dllexport) %RETURNTYPE% %MODELNAME%_%INOUT%%FUNCNAME%(paramTAB);
+$export_f=extern %RETURNTYPE% %MODELNAME%_%INOUT%%FUNCNAME%(paramTAB);
+$model_mem_f=static %RETURNTYPE% %NAME%(%PARAMETERS%);
+$var_decl=%TYPE% %VARNAME%;
+$parm_extract=std::string str_%VARNAME% = params.find("%PARMNAME%")->second;
+$parm_covert=%VARNAME% = %COVERT_FUNC%(str_%VARNAME%);	
+$parm_covert_str=%VARNAME% = str_%VARNAME%;	
+		
+$model_h_start	
+#pragma once
+
+#include "Model.h"
+#include <time.h>
+
+class NXTModel : public Model
+{
+
+public:
+	NXTModel(void);
+	~NXTModel(void);
+
+	%MEM_F_ELEM%
+};
+$model_h_end
+
+
+$extern_block_start	
+extern "C" //자동생성 (1)
+{
+	#ifdef _WIN32		
+		%EXPORT_ELEM_WIN%
+	#endif
+	#ifndef _WIN32
+		%EXPORT_ELEM_WIN%
+	#endif
+}
+$extern_block_end
+
+$member_f_def_start
+%RETURNTYPE% %MODELNAME%::%FUNCNAME%(%PARAMETERS%)
+{
+	return 0;
+}
+$member_f_def_end
+
+$extern_f_def_start
+%RETURNTYPE% %MODELNAME%_%INOUT%%FUNCNAME%(paramTAB params)
+{
+	%VAR_DECL_ELEM%
+
+	if(params.size()>0){
+		paramTAB::iterator it;
+		
+		%PARM_EXTRACT_ELEM%		
+
+		%PARM_COVERT_ELEM%		
+	}
+
+	return %MODELNAME%::%FUNCNAME%(%VARS%);
+}
+$extern_f_def_end
+
+
+
+$model_cpp_start
+#include "%MODELNAME%.h"
+
+%MODELNAME%::%MODELNAME%(void)
+{
+}
+
+%MODELNAME%::~%MODELNAME%(void)
+{
+}
+///////////////////////////////////////////////////////////////
+//                User Code Section
+///////////////////////////////////////////////////////////////
+%MEMBER_F_DEF_ELEM%
+
+///////////////////////////////////////////////////////////////
+//                DLL Function
+///////////////////////////////////////////////////////////////
+%EXTERN_INFO%
+%EXTERN_F_DEF_ELEM
+
+$model_cpp_end
+
+		
+
+
+
